@@ -1,3 +1,4 @@
+import 'package:day15_todo/create_to_do_page.dart';
 import 'package:flutter/material.dart';
 
 import 'widget/to_do_list_item.dart';
@@ -18,7 +19,11 @@ class _ListToDoPageState extends State<ListToDoPage> {
         elevation: 10.0,
         backgroundColor: Colors.black,
         onPressed: () {
-          debugPrint("Floating action clicked");
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const CreateToDoPage(),
+              ));
         },
         child: const Icon(
           Icons.add,
