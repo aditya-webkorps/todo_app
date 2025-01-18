@@ -1,6 +1,7 @@
 import 'package:day15_todo/create_to_do_page.dart';
 import 'package:flutter/material.dart';
 
+import 'to_do_model.dart';
 import 'widget/to_do_list_item.dart';
 
 class ListToDoPage extends StatefulWidget {
@@ -11,6 +12,8 @@ class ListToDoPage extends StatefulWidget {
 }
 
 class _ListToDoPageState extends State<ListToDoPage> {
+  List<ToDoModel> todoList = [];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -18,12 +21,20 @@ class _ListToDoPageState extends State<ListToDoPage> {
       floatingActionButton: FloatingActionButton(
         elevation: 10.0,
         backgroundColor: Colors.black,
-        onPressed: () {
-          Navigator.push(
+        onPressed: () async {
+          ToDoModel? data = await Navigator.push(
               context,
               MaterialPageRoute(
                 builder: (context) => const CreateToDoPage(),
-              ));
+              )) as ToDoModel?;
+
+          if (data != null) {
+            setState(() {
+              todoList.add(data);
+            });
+          }
+
+          debugPrint("${todoList.length}");
         },
         child: const Icon(
           Icons.add,
@@ -94,10 +105,27 @@ class _ListToDoPageState extends State<ListToDoPage> {
                   separatorBuilder: (BuildContext context, int index) {
                     return const Divider();
                   },
-                  itemCount: 10,
+                  itemCount: todoList.length,
                   itemBuilder: (BuildContext context, int index) {
-                    debugPrint("Item : $index");
-                    return ToDoListItem(index: index);
+                    return InkWell(
+                      onTap: () {
+                        debugPrint("item clicked $index");
+
+                        setState(() {
+
+                          if(todoList[index].isTaskCompleted){
+                            todoList[index].isTaskCompleted = false;
+                          } else {
+                            todoList[index].isTaskCompleted = true;
+                          }
+
+                        });
+                      },
+                      child: ToDoListItem(
+                        index: index,
+                        item: todoList[index],
+                      ),
+                    );
                   }),
             ),
           ],
